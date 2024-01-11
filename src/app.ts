@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
+const cors = require("cors");
 import { PG_GET, PG_CONNECT, PG_POST } from "./controllers/pg.controller";
 import { QUEST_CONNECT, QUEST_GET } from "./controllers/quest.controller";
 
@@ -7,6 +8,8 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3333;
+
+app.use(cors({ origin: "*" }));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("<h1> Express + TypeScript Server</h1>");

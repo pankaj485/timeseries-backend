@@ -20,7 +20,7 @@ export const QUEST_CONNECT = async () => {
 export const QUEST_GET = async () => {
   try {
     const { rows, rowCount } = await client.query(
-      "SELECT  time_v as time, obdRpm as rpm FROM ECE2023120115971.csv LIMIT 10;"
+      "SELECT  obdEngineLoad as engineLoad, obdRpm as rpm FROM ECE2023120115971.csv;"
     );
     return rows;
   } catch (err: any) {
