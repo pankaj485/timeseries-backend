@@ -22,12 +22,13 @@ export const QUEST_CONNECT = async () => {
 export const QUEST_GET = async (req: Request, res: Response) => {
   try {
     const { rows, rowCount } = await client.query(
-      "SELECT  obdEngineLoad as engineLoad, obdRpm as rpm FROM ECE2023120115971.csv LIMIT 5;"
+      "SELECT  obdEngineLoad as engineLoad, obdRpm as rpm FROM ECE2023120115971.csv ORDER BY time_v asc;"
     );
 
     return res.status(200).json({
       success: true,
       message: "Data retrived successfully",
+      rowCount,
       data: rows,
     });
   } catch (err: any) {

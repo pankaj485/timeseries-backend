@@ -41,6 +41,6 @@ app.post("/quest/upload/csv", upload.single("csvfile"), QUEST_UPLOAD_CSV);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
-  PG_CONNECT();
+  // PG_CONNECT();
   QUEST_CONNECT();
 });
