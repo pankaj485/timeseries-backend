@@ -67,22 +67,7 @@ app.get("/pg/post", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/quest/get", async (req: Request, res: Response) => {
-  try {
-    const questData = await QUEST_GET();
-
-    return res.status(200).json({
-      success: true,
-      message: "Data retrived successfully",
-      data: questData,
-    });
-  } catch (err: any) {
-    return res.status(400).json({
-      success: false,
-      message: err.message || "[APP]: Error getting data",
-    });
-  }
-});
+app.get("/quest/get", QUEST_GET);
 
 app.post("/quest/upload/csv", upload.single("csvfile"), QUEST_UPLOAD_CSV);
 

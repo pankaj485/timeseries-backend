@@ -19,15 +19,23 @@ export const QUEST_CONNECT = async () => {
   }
 };
 
-export const QUEST_GET = async () => {
+export const QUEST_GET = async (req: Request, res: Response) => {
   try {
     const { rows, rowCount } = await client.query(
-      "SELECT  obdEngineLoad as engineLoad, obdRpm as rpm FROM ECE2023120115971.csv ;"
+      "SELECT  obdEngineLoad as engineLoad, obdRpm as rpm FROM ECE2023120115971.csv LIMIT 5;"
     );
-    return rows;
+
+    return res.status(200).json({
+      success: true,
+      message: "Data retrived successfully",
+      data: rows,
+    });
   } catch (err: any) {
-    console.log("[QUEST -> Controller]: Error getting data");
-    console.log(err);
+    console.log("[QUEST_GET -> Controller]: Error getting data");
+    return res.status(400).json({
+      success: false,
+      message: err.message || "[QUEST_GET -> Controller]: Error getting data",
+    });
   }
 };
 
@@ -48,9 +56,11 @@ export const QUEST_UPLOAD_CSV = async (req: Request, res: Response) => {
       file,
     });
   } catch (err) {
+    console.log("[QUEST_UPLOAD_CSV -> Controller]: Error uploading file");
+
     return res.status(400).json({
       success: false,
-      message: "[APP]: Error uploading file ",
+      message: "[QUEST_UPLOAD_CSV -> Controller]: Error uploading file ",
     });
   }
 };
