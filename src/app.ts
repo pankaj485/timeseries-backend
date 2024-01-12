@@ -31,41 +31,9 @@ app.get("/", (req: Request, res: Response) => {
   res.end();
 });
 
-app.get("/pg/get", async (req: Request, res: Response) => {
-  try {
-    const getData = await PG_GET();
-    return res.status(200).json({
-      success: true,
-      message: "Data retrived sucessfully",
-      data: {
-        ...getData,
-      },
-    });
-  } catch (err: any) {
-    return res.status(200).json({
-      success: false,
-      message: err.message || "[APP]: Error retriving data",
-    });
-  }
-});
+app.get("/pg/get", PG_GET);
 
-app.get("/pg/post", async (req: Request, res: Response) => {
-  try {
-    const postedData = await PG_POST();
-    return res.status(200).json({
-      success: true,
-      message: "Data inserted sucessfully",
-      data: {
-        ...postedData,
-      },
-    });
-  } catch (err: any) {
-    return res.status(400).json({
-      success: false,
-      message: err.message || "[APP]: Error inserting data",
-    });
-  }
-});
+app.get("/pg/post", PG_POST);
 
 app.get("/quest/get", QUEST_GET);
 
@@ -73,6 +41,6 @@ app.post("/quest/upload/csv", upload.single("csvfile"), QUEST_UPLOAD_CSV);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
-  // PG_CONNECT();
+  PG_CONNECT();
   QUEST_CONNECT();
 });
