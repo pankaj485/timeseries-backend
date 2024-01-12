@@ -8,6 +8,7 @@ import bodyParser from "body-parser";
 import { PG_GET, PG_CONNECT, PG_POST } from "./controllers/pg.controller";
 import {
   QUEST_CONNECT,
+  QUEST_EMPTY_TABLE,
   QUEST_GET,
   QUEST_GET_CSV,
   QUEST_UPLOAD_CSV,
@@ -41,6 +42,8 @@ app.get("/quest/get", QUEST_GET);
 app.get("/quest/get/csv", QUEST_GET_CSV);
 
 app.post("/quest/upload/csv", upload.single("csvfile"), QUEST_UPLOAD_CSV);
+
+app.get("/quest/clear/csv", upload.single("csvfile"), QUEST_EMPTY_TABLE);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

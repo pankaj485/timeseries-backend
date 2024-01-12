@@ -130,6 +130,39 @@ export const QUEST_GET_CSV = async (req: Request, res: Response) => {
   }
 };
 
+export const QUEST_EMPTY_TABLE = async (req: Request, res: Response) => {
+  try {
+    const { command: truncateResCommand } = await client.query(
+      `TRUNCATE TABLE csvuploadData;`
+    );
+    console.log(
+      "[QUEST_EMPTY_TABLE -> truncateResCommand]: ",
+      truncateResCommand
+    );
+
+    const { rowCount, rows } = await client.query(
+      `SELECT * FROM csvuploadData ORDER BY time ASC;`
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Data cleared successfully",
+      rowCount,
+      data: rows,
+    });
+  } catch (err) {
+    console.log(
+      "[QUEST_EMPTY_TABLE -> Controller ]: Error clearing data from csvuploadData table"
+    );
+    console.log(err);
+    return res.status(400).json({
+      success: false,
+      message:
+        "[QUEST_EMPTY_TABLE -> Controller ]: Error clearing data from csvuploadData table",
+    });
+  }
+};
+
 /* 
 FIELDS: 
   time_v: 1701430000000,
