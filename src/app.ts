@@ -2,7 +2,6 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 const cors = require("cors");
 const multer = require("multer");
-import path from "path";
 
 import bodyParser from "body-parser";
 import { PG_GET, PG_CONNECT, PG_POST } from "./controllers/pg.controller";

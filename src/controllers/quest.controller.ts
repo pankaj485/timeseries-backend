@@ -31,8 +31,6 @@ const insertData = async (rowData: CsvuploadDataItem) => {
     let { rowCount } = await client.query(
       `INSERT INTO "csvuploadData" ("time", "obdRpm", "obdManifoldPressure", "obdThrottle") VALUES ('${time}', '${obdRpm}', ${obdManifoldPressure}, ${obdThrottle});`
     );
-
-    console.log("rowCount: ", rowCount);
   } catch (err) {
     console.log(
       "[insertData -> Controller ]: Error Inserting row data tp to csvuploadData table"
@@ -44,6 +42,7 @@ const insertData = async (rowData: CsvuploadDataItem) => {
 export const QUEST_CONNECT = async () => {
   try {
     await client.connect();
+    // createTable();
     console.log(`[QUEST DB]: Connected on PORT ${client.port}`);
   } catch (err: any) {
     console.log(err);
