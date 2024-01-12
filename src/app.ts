@@ -11,15 +11,15 @@ import {
   QUEST_GET,
   QUEST_UPLOAD_CSV,
 } from "./controllers/quest.controller";
-import { multerConfig } from "./utils/multer.util";
+import { multerStorageConfig } from "./utils/multer.util";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3333;
 
-const storage = multerConfig();
-const upload = multer(storage);
+const storage = multerStorageConfig(); // get configurations related to multer file uploads
+const upload = multer({ storage });
 
 app.use(cors({ origin: "*" }));
 
