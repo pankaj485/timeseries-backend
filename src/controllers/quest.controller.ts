@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 
 import { Client } from "pg";
+import { readCsvFile } from "../utils/csvParser.util";
+import { CsvuploadDataItem } from "../interfaces/quest.interface";
 
 const client = new Client({
   database: "qdb",
@@ -9,6 +11,35 @@ const client = new Client({
   port: 8812,
   user: "admin",
 });
+
+const createTable = async () => {
+  try {
+    await client.query(
+      `CREATE TABLE "csvuploadData" ("time" BIGINT, "obdRpm" BIGINT, "obdManifoldPressure" BIGINT, "obdThrottle" BIGINT);`
+    );
+  } catch (err) {
+    console.log("[createTable -> controller]: Error creating table");
+    console.log(err);
+  }
+};
+
+const insertData = async (rowData: CsvuploadDataItem) => {
+  try {
+    const { time, obdRpm, obdManifoldPressure, obdThrottle } = rowData;
+
+    // insert current row data into user table
+    let { rowCount } = await client.query(
+      `INSERT INTO "csvuploadData" ("time", "obdRpm", "obdManifoldPressure", "obdThrottle") VALUES ('${time}', '${obdRpm}', ${obdManifoldPressure}, ${obdThrottle});`
+    );
+
+    console.log("rowCount: ", rowCount);
+  } catch (err) {
+    console.log(
+      "[insertData -> Controller ]: Error Inserting row data tp to csvuploadData table"
+    );
+    console.log(err);
+  }
+};
 
 export const QUEST_CONNECT = async () => {
   try {
@@ -51,6 +82,14 @@ export const QUEST_UPLOAD_CSV = async (req: Request, res: Response) => {
       });
     }
 
+    const csvData: any[] = await readCsvFile();
+
+    csvData.forEach((currentRow, rowIndex) => {
+      const { time, obdRpm, obdManifoldPressure, obdThrottle } = currentRow;
+
+      // insertData({ time, obdRpm, obdManifoldPressure, obdThrottle });
+    });
+
     return res.status(200).json({
       success: true,
       message: "CSV uploaded successfully",
@@ -62,6 +101,31 @@ export const QUEST_UPLOAD_CSV = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       message: "[QUEST_UPLOAD_CSV -> Controller]: Error uploading file ",
+    });
+  }
+};
+
+export const QUEST_GET_CSV = async (req: Request, res: Response) => {
+  try {
+    const { rowCount, rows } = await client.query(
+      `SELECT * FROM csvuploadData ORDER BY time ASC;`
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Data retrived successfully",
+      rowCount,
+      data: rows,
+    });
+  } catch (err) {
+    console.log(
+      "[insertData -> Controller ]: Error retriving data from csvuploadData table"
+    );
+    console.log(err);
+    return res.status(400).json({
+      success: false,
+      message:
+        "[insertData -> Controller ]: Error retriving data from csvuploadData table",
     });
   }
 };

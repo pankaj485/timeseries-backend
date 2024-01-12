@@ -9,6 +9,7 @@ import { PG_GET, PG_CONNECT, PG_POST } from "./controllers/pg.controller";
 import {
   QUEST_CONNECT,
   QUEST_GET,
+  QUEST_GET_CSV,
   QUEST_UPLOAD_CSV,
 } from "./controllers/quest.controller";
 import { multerStorageConfig } from "./utils/multer.util";
@@ -36,6 +37,8 @@ app.get("/pg/get", PG_GET);
 app.get("/pg/post", PG_POST);
 
 app.get("/quest/get", QUEST_GET);
+
+app.get("/quest/get/csv", QUEST_GET_CSV);
 
 app.post("/quest/upload/csv", upload.single("csvfile"), QUEST_UPLOAD_CSV);
 
