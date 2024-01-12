@@ -1,7 +1,7 @@
 interface User {
   user: string;
   email: string;
-  time: number;
+  year: number;
 }
 
 export { User };

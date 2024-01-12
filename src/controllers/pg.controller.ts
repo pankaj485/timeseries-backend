@@ -9,9 +9,7 @@ export const PG_GET = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       message: "Data retrived sucessfully",
-      data: {
-        ...userData,
-      },
+      data: userData,
     });
   } catch (err: any) {
     console.log("[PG_GET -> Controller]: Error retriving data");
@@ -37,7 +35,7 @@ export const PG_POST = async (req: Request, res: Response) => {
   const userData: User = {
     user: "test2",
     email: "test@email.com",
-    time: Date.now(),
+    year: Date.now(),
   };
 
   try {

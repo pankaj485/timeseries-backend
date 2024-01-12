@@ -16,9 +16,21 @@ export const HTTP_Connect = () => {
   });
 };
 
-export const getData = async () => {
+const createTable = async () => {
   try {
-    const { rows } = await client.query("SELECT * FROM usersdata");
+    await client.query(
+      `CREATE TABLE "usersdata" ("user" VARCHAR(255), "email" VARCHAR(255), "year" BIGINT);`
+    );
+  } catch (err: any) {
+    console.log(err.message);
+  }
+};
+
+export const getData = async () => {
+  // createTable();
+
+  try {
+    const { rows } = await client.query("SELECT * FROM usersdata;");
     return rows;
   } catch (err: any) {
     console.log(err.message);
@@ -31,18 +43,18 @@ export const getData = async () => {
 
 export const postData = async (userData: User) => {
   try {
-    const { email, time, user } = userData;
+    const { email, user, year } = userData;
 
     // insert data into user table
     let { rowCount } = await client.query(
-      `INSERT INTO usersdata (name, email, year) VALUES ('${user}', '${email}', ${time});`
+      `INSERT INTO "usersdata" ("user", "email", "year") VALUES ('${user}', '${email}', ${year});`
     );
 
     return rowCount === 1
       ? {
           email,
           user,
-          time,
+          year,
         }
       : {
           success: false,
