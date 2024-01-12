@@ -6,13 +6,20 @@ import path from "path";
 
 import bodyParser from "body-parser";
 import { PG_GET, PG_CONNECT, PG_POST } from "./controllers/pg.controller";
-import { QUEST_CONNECT, QUEST_GET } from "./controllers/quest.controller";
+import {
+  QUEST_CONNECT,
+  QUEST_GET,
+  QUEST_UPLOAD_CSV,
+} from "./controllers/quest.controller";
+import { multerConfig } from "./utils/multer.util";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3333;
-const upload = multer({ dest: path.resolve(__dirname, "./uploads") });
+
+const storage = multerConfig();
+const upload = multer(storage);
 
 app.use(cors({ origin: "*" }));
 
@@ -77,33 +84,7 @@ app.get("/quest/get", async (req: Request, res: Response) => {
   }
 });
 
-app.post(
-  "/quest/upload/csv",
-  upload.single("csvFile"),
-  async (req: Request, res: Response) => {
-    try {
-      const { file } = req;
-
-      if (file?.mimetype !== "text/csv") {
-        return res.status(400).json({
-          success: true,
-          message: "Missing file or invalid file format",
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "CSV uploaded successfully",
-        file,
-      });
-    } catch (err) {
-      return res.status(400).json({
-        success: false,
-        message: "[APP]: Error uploading file ",
-      });
-    }
-  }
-);
+app.post("/quest/upload/csv", upload.single("csvfile"), QUEST_UPLOAD_CSV);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

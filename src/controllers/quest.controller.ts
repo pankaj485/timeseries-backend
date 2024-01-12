@@ -1,3 +1,5 @@
+import { Request, Response } from "express";
+
 import { Client } from "pg";
 
 const client = new Client({
@@ -29,11 +31,27 @@ export const QUEST_GET = async () => {
   }
 };
 
-export const QUEST_UPLOAD_CSV = async () => {
+export const QUEST_UPLOAD_CSV = async (req: Request, res: Response) => {
   try {
+    const { file } = req;
+
+    if (file?.mimetype !== "text/csv") {
+      return res.status(400).json({
+        success: true,
+        message: "Missing file or invalid file format",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "CSV uploaded successfully",
+      file,
+    });
   } catch (err) {
-    console.log("[QUEST -> Controller]: Error uploading CSV");
-    console.log(err);
+    return res.status(400).json({
+      success: false,
+      message: "[APP]: Error uploading file ",
+    });
   }
 };
 
