@@ -20,11 +20,20 @@ export const QUEST_CONNECT = async () => {
 export const QUEST_GET = async () => {
   try {
     const { rows, rowCount } = await client.query(
-      "SELECT  obdEngineLoad as engineLoad, obdRpm as rpm FROM ECE2023120115971.csv;"
+      "SELECT  obdEngineLoad as engineLoad, obdRpm as rpm FROM ECE2023120115971.csv ;"
     );
     return rows;
   } catch (err: any) {
     console.log("[QUEST -> Controller]: Error getting data");
+    console.log(err);
+  }
+};
+
+export const QUEST_UPLOAD_CSV = async () => {
+  try {
+  } catch (err) {
+    console.log("[QUEST -> Controller]: Error uploading CSV");
+    console.log(err);
   }
 };
 
